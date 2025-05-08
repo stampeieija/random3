@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Love Message Generator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to top right, #ffe0ec, #fff0f5);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    h2 {
+      color: #e91e63;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s;
+      z-index: 10;
+    }
+
+    button:hover {
+      background-color: #e91e63;
+    }
+
+    #result {
+      margin-top: 25px;
+      font-size: 28px;
+      color: #c2185b;
+      text-align: center;
+      max-width: 80%;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #result.show {
+      opacity: 1;
+      transform: scale(1.1);
+      animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      animation: float 4s linear;
+      font-size: 24px;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-600px) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>แตะหน้าจอ หรือกดปุ่มเพื่อรับความรัก 💕</h2>
+  <button onclick="startRandomEffect()">บอกรักฉันหน่อย!</button>
+  <p id="result"></p>
+
+  <!-- เพลงรัก -->
+  <audio autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- เสียงปิ๊ง -->
+  <audio id="pingSound">
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_0fc7e5dd52.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- เสียงรูด / สล็อต -->
+  <audio id="tickSound">
+    <source src="https://cdn.pixabay.com/audio/2023/02/16/audio_c4cc07c201.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const messages = [
+      // คำบอกรักภาษาไทย
+      "รักเธอนะ ไม่เปลี่ยนใจเลย 💖",
+      "เธอคือความสุขของฉันทุกวัน 💕",
+      "หัวใจดวงนี้เป็นของเธอเท่านั้น ❤️",
+      "อยู่กับเธอคือของขวัญที่ดีที่สุด 🎁",
+      "ขอบคุณที่เป็นทุกอย่างของฉัน 😘",
+      "ฉันรักเธอมากนะ 😍",
+      "เธอคือคนเดียวในใจฉันเสมอ 💘",
+      "ถ้าไม่มีเธอ ฉันคงไม่มีความหมาย 🥺",
+      "อยากจะอยู่ข้างๆ เธอตลอดไป 💑",
+      "ชีวิตนี้มีเธอคือทุกสิ่งทุกอย่าง 💞",
+      
+      // คำบอกรักภาษาอังกฤษ
+      "I love you more every day. 💘",
+      "You are my sunshine. ☀️",
+      "I’m so lucky to have you. 🌹",
+      "You mean the world to me. 🌍",
+      "My heart beats only for you. 💓",
+      "I can’t imagine life without you. 💗",
+      "You’re the one I’ve been waiting for. 💌",
+      "You complete me in every way. 💖",
+      "Every moment with you is precious. 💝",
+      "My love for you is endless. ❤️",
+      
+      // คำบอกรักสุดครีเอทีฟ
+      "You're my reason to smile every day. 😊",
+      "You are the best part of my life. 💞",
+      "You make my world brighter just by being in it. 🌟",
+      "With you, I feel complete. 💑",
+      "I fall in love with you all over again every day. 💓",
+      "You're my forever and always. 💍",
+      "You’re the love I’ve always dreamed of. 💘",
+      "Being with you feels like home. 🏡",
+      "You’re my favorite place to be. 🌸",
+      "I’m grateful for every moment spent with you. 🌹",
+    ];
+
+    const result = document.getElementById("result");
+    const ping = document.getElementById("pingSound");
+    const tick = document.getElementById("tickSound");
+
+    function startRandomEffect() {
+      let count = 0;
+      let interval = setInterval(() => {
+        const temp = messages[Math.floor(Math.random() * messages.length)];
+        result.textContent = temp;
+        result.classList.add("show");
+
+        // เล่นเสียงหมุน
+        tick.currentTime = 0;
+        tick.play();
+
+        count++;
+        if (count > 15) {
+          clearInterval(interval);
+          showLove();
+        }
+      }, 100);
+
+      createHeart(); // แสดงหัวใจทันที
+    }
+
+    function showLove() {
+      const finalMsg = messages[Math.floor(Math.random() * messages.length)];
+      result.textContent = finalMsg;
+      result.classList.remove("show");
+      void result.offsetWidth;
+      result.classList.add("show");
+
+      ping.currentTime = 0;
+      ping.play();
+
+      createHeart();
+    }
+
+    function createHeart(x = Math.random() * window.innerWidth, y = window.innerHeight - 50) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerText = "❤️";
+      heart.style.left = x + "px";
+      heart.style.top = y + "px";
+      heart.style.fontSize = Math.random() * 20 + 20 + "px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 4000);
+    }
+
+    // เพิ่มหัวใจเมื่อคลิกที่หน้าจอ (ที่ใดก็ได้)
+    document.body.addEventListener("click", (e) => {
+      if (!e.target.closest("button")) {
+        createHeart(e.clientX, e.clientY);
+      }
+    });
+  </script>
+</body>
+</html>
